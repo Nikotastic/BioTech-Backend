@@ -104,8 +104,8 @@ public class FeedingEventConfiguration : IEntityTypeConfiguration<FeedingEvent>
             .HasDatabaseName("ix_feeding_events_farm_supply_date");
 
         // Check constraint
-        builder.HasCheckConstraint(
+        builder.ToTable(t => t.HasCheckConstraint(
             "check_feeding_destination",
-            "batch_id IS NOT NULL OR animal_id IS NOT NULL");
+            "batch_id IS NOT NULL OR animal_id IS NOT NULL"));
     }
 }

@@ -1,4 +1,5 @@
 using FeedingService.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace FeedingService.Infrastructure.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;

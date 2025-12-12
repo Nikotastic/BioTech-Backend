@@ -1,4 +1,5 @@
 using DotNetEnv;
+using FeedingService.Application;
 using FeedingService.Application.Commands;
 using FeedingService.Infrastructure;
 using FeedingService.Presentation.Middlewares;
@@ -59,8 +60,7 @@ builder.Services.AddSwaggerGen(c =>
 - The Gateway validates JWT and forwards user information via headers"
     });
 
-    // Para testing directo (sin Gateway), se puede agregar X-Gateway-Secret manualmente
-    c.AddSecurityDefinition("Gateway", new OpenApiSecurityScheme
+        c.AddSecurityDefinition("Gateway", new OpenApiSecurityScheme
     {
         Description = "Gateway Secret for direct access (X-Gateway-Secret header)",
         Name = "X-Gateway-Secret",
