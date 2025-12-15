@@ -25,9 +25,7 @@ builder.Services.AddFluentValidationAutoValidation();
 // Infrastructure
 builder.Services.AddInfrastructure(builder.Configuration);
 
-// Gateway Authentication (Opción 2 Recomendada)
-// El microservicio NO valida JWT, confía en headers del Gateway
-// Validamos que la petición viene del Gateway usando un secret compartido
+
 builder.Services.AddScoped<GatewayAuthenticationService>();
 
 builder.Services.AddAuthorization();
