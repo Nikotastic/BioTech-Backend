@@ -18,7 +18,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // 3. Configure CORS (Merged User Request)
-// Allows specific Vercel subdomains + localhost for development
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowVercel", policy =>
