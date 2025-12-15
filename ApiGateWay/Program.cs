@@ -29,6 +29,12 @@ builder.Services.AddDbContext<ApiGateWay.Data.AuthDbContext>(options =>
 // JWT Authentication
 var secretKey = builder.Configuration["JwtConfig:Secret"];
 
+// Port for deploy
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(8080);
+});
+
 // Fallback: Check for JWT_SECRET directly environment variable (useful if mapping fails)
 if (string.IsNullOrEmpty(secretKey))
 {
