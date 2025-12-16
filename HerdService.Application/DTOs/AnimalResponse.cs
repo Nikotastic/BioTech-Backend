@@ -1,18 +1,24 @@
-using HerdService.Domain.Enums;
-
 namespace HerdService.Application.DTOs;
 
 public record AnimalResponse(
     long Id,
+    string TagNumber,
+    string? ElectronicId,
     int FarmId,
-    string Identifier,
-    DateTime BirthDate,
     int BreedId,
-    int? CategoryId,
+    string? BreedName,
+    int CategoryId,
+    string? CategoryName,
     int? BatchId,
+    string? BatchName,
     int? PaddockId,
-    int Gender,
-    int Status,
-    DateTime CreatedAt,
-    int? CreatedBy
+    string? PaddockName,
+    DateOnly BirthDate,
+    int AgeInMonths,
+    string Sex,
+    decimal? CurrentWeight,
+    DateOnly? LastWeightDate,
+    string Status,
+    bool IsActive,
+    string? Notes
 );
