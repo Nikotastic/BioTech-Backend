@@ -16,6 +16,20 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
     serverOptions.ListenAnyIP(int.Parse(port));
 });
 
+// Configure Database Connection from Environment Variables (Railway)
+var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+if (!string.IsNullOrEmpty(dbHost))
+{
+    var dbPort = Environment.GetEnvironmentVariable("DB_PORT");
+    var dbName = Environment.GetEnvironmentVariable("DB_DATABASE") ?? Environment.GetEnvironmentVariable("DB_NAME"); // Support both naming
+    var dbUser = Environment.GetEnvironmentVariable("DB_USER");
+    var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
+    var dbSslMode = Environment.GetEnvironmentVariable("DB_SSL_MODE") ?? "Require";
+
+    var connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword};Ssl Mode={dbSslMode};";
+    builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
+}
+
 Env.Load();
 // Add services to the container
 builder.Services.AddControllers();
