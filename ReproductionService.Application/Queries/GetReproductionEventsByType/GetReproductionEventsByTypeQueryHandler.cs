@@ -16,7 +16,8 @@ public class GetReproductionEventsByTypeQueryHandler : IRequestHandler<GetReprod
 
     public async Task<ReproductionEventListResponse> Handle(GetReproductionEventsByTypeQuery request, CancellationToken ct)
     {
-        var events = await _repository.GetByTypeAsync(request.Type, request.FarmId, ct);
+        var pageSize = request.PageSize > 10 ? 10 : request.PageSize;
+        var events = await _repository.GetByTypeAsync(request.Type, request.FarmId, request.Page, pageSize, ct);
         var responses = events.Select(MapToResponse).ToList();
         return new ReproductionEventListResponse(responses, responses.Count);
     }

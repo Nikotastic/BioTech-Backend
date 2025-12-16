@@ -31,7 +31,7 @@ public class CommercialRepository : ICommercialRepository
             .FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
     }
 
-    public async Task<List<CommercialTransaction>> GetTransactionsAsync(int farmId, DateTime? fromDate, DateTime? toDate, TransactionType? type, CancellationToken cancellationToken)
+    public async Task<List<CommercialTransaction>> GetTransactionsAsync(int farmId, DateTime? fromDate, DateTime? toDate, TransactionType? type, int page, int pageSize, CancellationToken cancellationToken)
     {
         var query = _context.Transactions.AsNoTracking().Where(t => t.FarmId == farmId);
 
@@ -44,7 +44,11 @@ public class CommercialRepository : ICommercialRepository
         if (type.HasValue)
             query = query.Where(t => t.TransactionType == type.Value);
 
-        return await query.OrderByDescending(t => t.TransactionDate).ToListAsync(cancellationToken);
+        return await query
+            .OrderByDescending(t => t.TransactionDate)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<List<TransactionAnimalDetail>> GetTransactionAnimalsAsync(long transactionId, CancellationToken cancellationToken)

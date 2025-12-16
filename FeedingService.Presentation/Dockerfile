@@ -10,6 +10,7 @@ COPY FeedingService.Application/*.csproj ./FeedingService.Application/
 COPY FeedingService.Domain/*.csproj ./FeedingService.Domain/
 COPY FeedingService.Infrastructure/*.csproj ./FeedingService.Infrastructure/
 COPY FeedingService.Presentation/*.csproj ./FeedingService.Presentation/
+COPY Shared.Infrastructure/*.csproj ./Shared.Infrastructure/
 
 # Restore dependencies
 RUN dotnet restore FeedingService.Presentation/FeedingService.Presentation.csproj

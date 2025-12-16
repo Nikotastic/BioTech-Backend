@@ -16,7 +16,8 @@ public class GetFeedingEventsByProductQueryHandler : IRequestHandler<GetFeedingE
 
     public async Task<FeedingEventListResponse> Handle(GetFeedingEventsByProductQuery request, CancellationToken ct)
     {
-        var events = await _repository.GetByProductIdAsync(request.ProductId, ct);
+        var pageSize = request.PageSize > 10 ? 10 : request.PageSize;
+        var events = await _repository.GetByProductIdAsync(request.ProductId, request.Page, pageSize, ct);
         var responses = events.Select(MapToResponse).ToList();
         return new FeedingEventListResponse(responses, responses.Count);
     }

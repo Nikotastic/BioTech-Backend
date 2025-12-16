@@ -39,6 +39,14 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<ReproductionDbContext>();
 
+// Register Messenger
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<Shared.Infrastructure.Interfaces.IMessenger, Shared.Infrastructure.Services.HttpMessenger>();
+
+// Register Gateway Auth
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ReproductionService.Presentation.Services.GatewayAuthenticationService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

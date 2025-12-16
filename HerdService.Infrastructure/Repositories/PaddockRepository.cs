@@ -30,4 +30,11 @@ public class PaddockRepository : IPaddockRepository
     {
         return await _context.Paddocks.FindAsync(new object[] { id }, cancellationToken);
     }
+
+    public async Task<IEnumerable<Paddock>> GetByFarmIdAsync(int farmId, CancellationToken cancellationToken)
+    {
+        return await _context.Paddocks
+            .Where(p => p.FarmId == farmId)
+            .ToListAsync(cancellationToken);
+    }
 }

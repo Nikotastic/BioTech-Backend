@@ -10,6 +10,7 @@ COPY ReproductionService.Application/*.csproj ./ReproductionService.Application/
 COPY ReproductionService.Domain/*.csproj ./ReproductionService.Domain/
 COPY ReproductionService.Infrastructure/*.csproj ./ReproductionService.Infrastructure/
 COPY ReproductionService.Presentation/*.csproj ./ReproductionService.Presentation/
+COPY Shared.Infrastructure/*.csproj ./Shared.Infrastructure/
 
 # Restore dependencies
 RUN dotnet restore ReproductionService.Presentation/ReproductionService.Presentation.csproj

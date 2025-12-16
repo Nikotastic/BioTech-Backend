@@ -39,6 +39,15 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<HerdDbContext>();
 
+// Register Messenger
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<Shared.Infrastructure.Interfaces.IMessenger, Shared.Infrastructure.Services.HttpMessenger>();
+builder.Services.AddScoped<HerdService.Application.Interfaces.IBatchRepository, HerdService.Infrastructure.Repositories.BatchRepository>();
+
+// Register Gateway Auth
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<HerdService.Presentation.Services.GatewayAuthenticationService>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

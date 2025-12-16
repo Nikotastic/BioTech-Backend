@@ -1,6 +1,25 @@
 {
     "Routes": [
         {
+            "DownstreamPathTemplate": "/api/Chat/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "ai-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/Chat/{everything}",
+            "UpstreamHttpMethod": [
+                "POST",
+                "OPTIONS"
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+        {
             "DownstreamPathTemplate": "/api/Auth/{everything}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
@@ -17,6 +36,28 @@
                 "DELETE",
                 "OPTIONS"
             ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/v1/Farms/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "auth-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/v1/Farms/{everything}",
+            "UpstreamHttpMethod": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
         },
         {
             "DownstreamPathTemplate": "/api/v1/FeedingEvents/{everything}",
@@ -181,6 +222,138 @@
                 }
             ],
             "UpstreamPathTemplate": "/api/v1/paddocks/{everything}",
+            "UpstreamHttpMethod": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/HealthEvent/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "health-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/HealthEvent/{everything}",
+            "UpstreamHttpMethod": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/transactions/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "commercial-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/transactions/{everything}",
+            "UpstreamHttpMethod": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/third-parties/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "commercial-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/third-parties/{everything}",
+            "UpstreamHttpMethod": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/Products/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "inventory-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/Products/{everything}",
+            "UpstreamHttpMethod": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/Inventory/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "inventory-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/Inventory/{everything}",
+            "UpstreamHttpMethod": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/InventoryMovements/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "inventory-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/InventoryMovements/{everything}",
             "UpstreamHttpMethod": [
                 "GET",
                 "POST",

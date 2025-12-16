@@ -63,11 +63,13 @@ public class FeedingEventsController : ControllerBase
         int farmId,
         [FromQuery] DateTime? fromDate,
         [FromQuery] DateTime? toDate,
-        CancellationToken ct)
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        CancellationToken ct = default)
     {
         _logger.LogInformation("Getting feeding events for farm: {FarmId}", farmId);
 
-        var query = new GetFeedingEventsByFarmQuery(farmId, fromDate, toDate);
+        var query = new GetFeedingEventsByFarmQuery(farmId, fromDate, toDate, page, pageSize);
         var result = await _mediator.Send(query, ct);
 
         return Ok(ApiResponse<FeedingEventListResponse>.Ok(result));
@@ -78,11 +80,15 @@ public class FeedingEventsController : ControllerBase
     /// </summary>
     [HttpGet("batch/{batchId}")]
     [ProducesResponseType(typeof(ApiResponse<FeedingEventListResponse>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetByBatch(int batchId, CancellationToken ct)
+    public async Task<IActionResult> GetByBatch(
+        int batchId,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        CancellationToken ct = default)
     {
         _logger.LogInformation("Getting feeding events for batch: {BatchId}", batchId);
 
-        var query = new GetFeedingEventsByBatchQuery(batchId);
+        var query = new GetFeedingEventsByBatchQuery(batchId, page, pageSize);
         var result = await _mediator.Send(query, ct);
 
         return Ok(ApiResponse<FeedingEventListResponse>.Ok(result));
@@ -93,11 +99,15 @@ public class FeedingEventsController : ControllerBase
     /// </summary>
     [HttpGet("product/{productId}")]
     [ProducesResponseType(typeof(ApiResponse<FeedingEventListResponse>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetByProduct(int productId, CancellationToken ct)
+    public async Task<IActionResult> GetByProduct(
+        int productId,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        CancellationToken ct = default)
     {
         _logger.LogInformation("Getting feeding events for product: {ProductId}", productId);
 
-        var query = new GetFeedingEventsByProductQuery(productId);
+        var query = new GetFeedingEventsByProductQuery(productId, page, pageSize);
         var result = await _mediator.Send(query, ct);
 
         return Ok(ApiResponse<FeedingEventListResponse>.Ok(result));
@@ -108,11 +118,15 @@ public class FeedingEventsController : ControllerBase
     /// </summary>
     [HttpGet("animal/{animalId}")]
     [ProducesResponseType(typeof(ApiResponse<FeedingEventListResponse>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetByAnimal(long animalId, CancellationToken ct)
+    public async Task<IActionResult> GetByAnimal(
+        long animalId,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        CancellationToken ct = default)
     {
         _logger.LogInformation("Getting feeding events for animal: {AnimalId}", animalId);
 
-        var query = new GetFeedingEventsByAnimalQuery(animalId);
+        var query = new GetFeedingEventsByAnimalQuery(animalId, page, pageSize);
         var result = await _mediator.Send(query, ct);
 
         return Ok(ApiResponse<FeedingEventListResponse>.Ok(result));

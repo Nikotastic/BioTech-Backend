@@ -1,28 +1,31 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER app
-WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
-
+# Build stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["CommercialService.Presentation/CommercialService.Presentation.csproj", "CommercialService.Presentation/"]
-COPY ["CommercialService.Application/CommercialService.Application.csproj", "CommercialService.Application/"]
-COPY ["CommercialService.Domain/CommercialService.Domain.csproj", "CommercialService.Domain/"]
-COPY ["CommercialService.Infrastructure/CommercialService.Infrastructure.csproj", "CommercialService.Infrastructure/"]
-RUN dotnet restore "./CommercialService.Presentation/CommercialService.Presentation.csproj"
+
+# Copy solution file
+COPY BioTech-Backend.sln .
+
+# Copy all project files
+COPY CommercialService.Application/*.csproj ./CommercialService.Application/
+COPY CommercialService.Domain/*.csproj ./CommercialService.Domain/
+COPY CommercialService.Infrastructure/*.csproj ./CommercialService.Infrastructure/
+COPY CommercialService.Presentation/*.csproj ./CommercialService.Presentation/
+COPY Shared.Infrastructure/*.csproj ./Shared.Infrastructure/
+
+# Restore dependencies
+RUN dotnet restore CommercialService.Presentation/CommercialService.Presentation.csproj
+
+# Copy all source code
 COPY . .
-WORKDIR "/src/CommercialService.Presentation"
-RUN dotnet build "./CommercialService.Presentation.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./CommercialService.Presentation.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+# Build and publish
+WORKDIR /src/CommercialService.Presentation
+RUN dotnet publish -c Release -o /app/publish
 
-FROM base AS final
+# Runtime stage
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/publish .
+
+EXPOSE 8080
 ENTRYPOINT ["dotnet", "CommercialService.Presentation.dll"]

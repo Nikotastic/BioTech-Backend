@@ -1,10 +1,14 @@
 using MediatR;
 using HealthService.Application.DTOs;
 using HealthService.Application.Interfaces;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace HealthService.Application.Queries;
+namespace HealthService.Application.Queries.GetHealthEventsByFarm;
 
-public class GetHealthEventsByFarmQueryHandler : IRequestHandler<GetHealthEventsByFarmQuery, HealthEventListResponse>
+public class GetHealthEventsByFarmQueryHandler : IRequestHandler<GetHealthEventsByFarmQuery, List<HealthEventResponse>>
 {
     private readonly IHealthEventRepository _repository;
 
@@ -13,37 +17,23 @@ public class GetHealthEventsByFarmQueryHandler : IRequestHandler<GetHealthEvents
         _repository = repository;
     }
 
-    public async Task<HealthEventListResponse> Handle(GetHealthEventsByFarmQuery request, CancellationToken cancellationToken)
+    public async Task<List<HealthEventResponse>> Handle(GetHealthEventsByFarmQuery request, CancellationToken cancellationToken)
     {
-        var events = await _repository.GetByFarmIdAsync(
-            request.FarmId, 
-            request.FromDate, 
-            request.ToDate, 
-            request.EventType, 
-            cancellationToken);
+        var events = await _repository.GetByFarmIdAsync(request.FarmId, request.Page, request.PageSize, cancellationToken);
 
-        var responseList = events.Select(e => new HealthEventResponse(
+        return events.Select(e => new HealthEventResponse(
             e.Id,
             e.FarmId,
-            e.AnimalId,
-            e.BatchId,
-            e.EventType,
             e.EventDate,
-            e.Disease,
-            e.Treatment,
-            e.Medication,
-            e.Dosage,
-            e.DosageUnit,
-            e.VeterinarianName,
-            e.Cost,
-            e.Notes,
-            e.NextFollowUpDate,
-            e.RequiresFollowUp,
-            e.FollowUpNotes,
+            e.EventType,
+            e.BatchId,
+            e.AnimalId,
+            e.DiseaseDiagnosisId,
+            e.ProfessionalId,
+            e.ServiceCost.Amount,
+            e.Observations,
             e.CreatedAt,
-            e.UpdatedAt
-        ));
-
-        return new HealthEventListResponse(responseList, events.Count());
+            e.CreatedBy
+        )).ToList();
     }
 }

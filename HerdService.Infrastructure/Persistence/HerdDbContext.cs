@@ -1,34 +1,26 @@
-using HerdService.Domain.Common;
 using HerdService.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace HerdService.Infrastructure.Persistence;
 
 public class HerdDbContext : DbContext
 {
-    public DbSet<Animal> Animals { get; set; }
-    public DbSet<Breed> Breeds { get; set; }
-    public DbSet<AnimalCategory> AnimalCategories { get; set; }
-    public DbSet<Batch> Batches { get; set; }
-    public DbSet<Paddock> Paddocks { get; set; }
-    public DbSet<MovementType> MovementTypes { get; set; }
-    public DbSet<AnimalMovement> AnimalMovements { get; set; }
+    public HerdDbContext(DbContextOptions<HerdDbContext> options) : base(options)
+    {
+    }
 
-    public HerdDbContext(DbContextOptions<HerdDbContext> options) : base(options) { }
+    public DbSet<Animal> Animals => Set<Animal>();
+    public DbSet<Batch> Batches => Set<Batch>();
+    public DbSet<AnimalCategory> AnimalCategories => Set<AnimalCategory>();
+    public DbSet<Breed> Breeds => Set<Breed>();
+    public DbSet<Paddock> Paddocks => Set<Paddock>();
+    public DbSet<MovementType> MovementTypes => Set<MovementType>();
+    public DbSet<AnimalMovement> AnimalMovements => Set<AnimalMovement>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(HerdDbContext).Assembly);
-    }
-
-    public override Task<int> SaveChangesAsync(CancellationToken ct = default)
-    {
-        foreach (var entry in ChangeTracker.Entries<IAuditableEntity>())
-        {
-            if (entry.State == EntityState.Added) entry.Entity.CreatedAt = DateTime.UtcNow;
-            if (entry.State == EntityState.Modified) entry.Entity.UpdatedAt = DateTime.UtcNow;
-        }
-        return base.SaveChangesAsync(ct);
     }
 }

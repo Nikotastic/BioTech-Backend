@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using AuthService.Application.Interfaces;
 using AuthService.Domain.Interfaces;
 using AuthService.Infrastructure.Persistence;
+using AuthService.Infrastructure.Repositories;
 using AuthService.Infrastructure.Services;
 
 namespace AuthService.Infrastructure;
@@ -16,7 +17,10 @@ public static class DependencyInjection
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
+        services.AddScoped<ITenantRepository, TenantRepository>();
+        services.AddScoped<IFarmRepository, FarmRepository>();
 
         services.AddScoped<IJwtProvider, JwtProvider>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
