@@ -17,4 +17,12 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\InventoryService.Application\InventoryService.Application.csproj" />
+      <ProjectReference Include="..\InventoryService.Domain\InventoryService.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+    </ItemGroup>
 </Project>

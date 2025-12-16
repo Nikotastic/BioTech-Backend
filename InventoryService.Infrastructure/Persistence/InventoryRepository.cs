@@ -1,10 +1,9 @@
-using InventoryService.Domain.Entities;
-using InventoryService.Domain.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using InventoryService.Application.Interfaces;
+using InventoryService.Domain.Entities;
 
 namespace InventoryService.Infrastructure.Persistence;
 
@@ -17,17 +16,37 @@ public class InventoryRepository : IInventoryRepository
         _context = context;
     }
 
-    public async Task AddMovementAsync(InventoryMovement movement, CancellationToken cancellationToken)
+    public async Task<InventoryItem> GetByIdAsync(int id)
     {
-        await _context.InventoryMovements.AddAsync(movement, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        return await _context.InventoryItems.FindAsync(id);
     }
 
-    public async Task<IEnumerable<InventoryMovement>> GetMovementsByProductIdAsync(int productId, CancellationToken cancellationToken)
+    public async Task<IEnumerable<InventoryItem>> GetByFarmIdAsync(int farmId, int page, int pageSize)
     {
-        return await _context.InventoryMovements
-            .Where(m => m.ProductId == productId)
-            .OrderByDescending(m => m.MovementDate)
-            .ToListAsync(cancellationToken);
+        return await _context.InventoryItems
+            .AsNoTracking()
+            .Where(i => i.FarmId == farmId)
+            .OrderByDescending(i => i.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+    }
+
+    public async Task AddAsync(InventoryItem item)
+    {
+        await _context.InventoryItems.AddAsync(item);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateAsync(InventoryItem item)
+    {
+        _context.InventoryItems.Update(item);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(InventoryItem item)
+    {
+        _context.InventoryItems.Remove(item);
+        await _context.SaveChangesAsync();
     }
 }

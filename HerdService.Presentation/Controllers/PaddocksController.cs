@@ -2,6 +2,7 @@ using HerdService.Application.Commands.CreatePaddock;
 using HerdService.Application.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using HerdService.Application.Queries.GetPaddocksByFarm;
 
 namespace HerdService.Presentation.Controllers;
 
@@ -21,5 +22,13 @@ public class PaddocksController : ControllerBase
     {
         var result = await _mediator.Send(command);
         return CreatedAtAction(nameof(Create), new { id = result.Id }, result);
+    }
+
+    [HttpGet("farm/{farmId}")]
+    public async Task<ActionResult<IEnumerable<PaddockResponse>>> GetByFarm(int farmId)
+    {
+        var query = new GetPaddocksByFarmQuery(farmId);
+        var result = await _mediator.Send(query);
+        return Ok(result);
     }
 }

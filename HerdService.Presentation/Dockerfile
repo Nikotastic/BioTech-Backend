@@ -6,20 +6,20 @@ WORKDIR /src
 COPY BioTech-Backend.sln .
 
 # Copy all project files
-COPY AuthService.Application/*.csproj ./AuthService.Application/
-COPY AuthService.Domain/*.csproj ./AuthService.Domain/
-COPY AuthService.Presentation/*.csproj ./AuthService.Presentation/
-COPY Authservice.Infrastructure/*.csproj ./Authservice.Infrastructure/
+COPY HerdService.Application/*.csproj ./HerdService.Application/
+COPY HerdService.Domain/*.csproj ./HerdService.Domain/
+COPY HerdService.Infrastructure/*.csproj ./HerdService.Infrastructure/
+COPY HerdService.Presentation/*.csproj ./HerdService.Presentation/
 COPY Shared.Infrastructure/*.csproj ./Shared.Infrastructure/
 
 # Restore dependencies
-RUN dotnet restore AuthService.Presentation/AuthService.Presentation.csproj
+RUN dotnet restore HerdService.Presentation/HerdService.Presentation.csproj
 
 # Copy all source code
 COPY . .
 
 # Build and publish
-WORKDIR /src/AuthService.Presentation
+WORKDIR /src/HerdService.Presentation
 RUN dotnet publish -c Release -o /app/publish
 
 # Runtime stage
@@ -28,4 +28,4 @@ WORKDIR /app
 COPY --from=build /app/publish .
 
 EXPOSE 8080
-ENTRYPOINT ["dotnet", "AuthService.Presentation.dll"]
+ENTRYPOINT ["dotnet", "HerdService.Presentation.dll"]

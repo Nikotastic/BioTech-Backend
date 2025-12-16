@@ -1,18 +1,9 @@
-using InventoryService.Application;
-using InventoryService.Infrastructure;
-
+using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration);
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
-    });
-
+builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -20,6 +11,16 @@ builder.Services.AddSwaggerGen();
 // Register Messenger
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<Shared.Infrastructure.Interfaces.IMessenger, Shared.Infrastructure.Services.HttpMessenger>();
+
+// Register MediatR
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(InventoryService.Application.Handlers.CreateInventoryItemCommandHandler).Assembly));
+
+// Register DbContext (InMemory for now as placeholder)
+builder.Services.AddDbContext<InventoryService.Infrastructure.Persistence.InventoryDbContext>(options =>
+    options.UseInMemoryDatabase("InventoryDb"));
+
+// Register Repository
+builder.Services.AddScoped<InventoryService.Application.Interfaces.IInventoryRepository, InventoryService.Infrastructure.Persistence.InventoryRepository>();
 
 var app = builder.Build();
 
