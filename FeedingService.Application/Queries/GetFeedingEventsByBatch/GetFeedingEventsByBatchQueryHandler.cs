@@ -5,8 +5,7 @@ using MediatR;
 
 namespace FeedingService.Application.Queries.GetFeedingEventsByBatch;
 
-public class GetFeedingEventsByBatchQueryHandler 
-    : IRequestHandler<GetFeedingEventsByBatchQuery, FeedingEventListResponse>
+public class GetFeedingEventsByBatchQueryHandler : IRequestHandler<GetFeedingEventsByBatchQuery, FeedingEventListResponse>
 {
     private readonly IFeedingEventRepository _repository;
 
@@ -15,14 +14,11 @@ public class GetFeedingEventsByBatchQueryHandler
         _repository = repository;
     }
 
-    public async Task<FeedingEventListResponse> Handle(
-        GetFeedingEventsByBatchQuery request, 
-        CancellationToken ct)
+    public async Task<FeedingEventListResponse> Handle(GetFeedingEventsByBatchQuery request, CancellationToken ct)
     {
-        var events = await _repository.GetByBatchIdAsync(request.BatchId, ct);
-
+        var pageSize = request.PageSize > 10 ? 10 : request.PageSize;
+        var events = await _repository.GetByBatchIdAsync(request.BatchId, request.Page, pageSize, ct);
         var responses = events.Select(MapToResponse).ToList();
-
         return new FeedingEventListResponse(responses, responses.Count);
     }
 

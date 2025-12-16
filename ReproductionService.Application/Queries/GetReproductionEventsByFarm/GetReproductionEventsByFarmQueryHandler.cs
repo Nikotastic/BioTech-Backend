@@ -16,7 +16,8 @@ public class GetReproductionEventsByFarmQueryHandler : IRequestHandler<GetReprod
 
     public async Task<ReproductionEventListResponse> Handle(GetReproductionEventsByFarmQuery request, CancellationToken ct)
     {
-        var events = await _repository.GetByFarmIdAsync(request.FarmId, request.FromDate, request.ToDate, ct);
+        var pageSize = request.PageSize > 10 ? 10 : request.PageSize;
+        var events = await _repository.GetByFarmIdAsync(request.FarmId, request.FromDate, request.ToDate, request.Page, pageSize, ct);
         var responses = events.Select(MapToResponse).ToList();
         return new ReproductionEventListResponse(responses, responses.Count);
     }

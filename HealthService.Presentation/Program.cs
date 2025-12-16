@@ -67,6 +67,10 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// Register Messenger
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<Shared.Infrastructure.Interfaces.IMessenger, Shared.Infrastructure.Services.HttpMessenger>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

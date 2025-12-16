@@ -41,9 +41,12 @@ public class ReproductionController : ControllerBase
     /// Get reproduction events by animal
     /// </summary>
     [HttpGet("animal/{animalId}")]
-    public async Task<ActionResult<ReproductionEventListResponse>> GetByAnimal(long animalId)
+    public async Task<ActionResult<ReproductionEventListResponse>> GetByAnimal(
+        long animalId,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
     {
-        var query = new GetReproductionEventsByAnimalQuery(animalId);
+        var query = new GetReproductionEventsByAnimalQuery(animalId, page, pageSize);
         var result = await _mediator.Send(query);
         return Ok(result);
     }
@@ -55,9 +58,11 @@ public class ReproductionController : ControllerBase
     public async Task<ActionResult<ReproductionEventListResponse>> GetByFarm(
         int farmId,
         [FromQuery] DateTime? fromDate,
-        [FromQuery] DateTime? toDate)
+        [FromQuery] DateTime? toDate,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
     {
-        var query = new GetReproductionEventsByFarmQuery(farmId, fromDate, toDate);
+        var query = new GetReproductionEventsByFarmQuery(farmId, fromDate, toDate, page, pageSize);
         var result = await _mediator.Send(query);
         return Ok(result);
     }
@@ -68,9 +73,11 @@ public class ReproductionController : ControllerBase
     [HttpGet("type/{type}")]
     public async Task<ActionResult<ReproductionEventListResponse>> GetByType(
         ReproductionEventType type,
-        [FromQuery] int farmId)
+        [FromQuery] int farmId,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
     {
-        var query = new GetReproductionEventsByTypeQuery(type, farmId);
+        var query = new GetReproductionEventsByTypeQuery(type, farmId, page, pageSize);
         var result = await _mediator.Send(query);
         return Ok(result);
     }

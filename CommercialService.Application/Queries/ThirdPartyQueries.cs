@@ -9,7 +9,7 @@ using System.Linq;
 namespace CommercialService.Application.Queries;
 
 // List
-public record GetThirdPartiesQuery(int FarmId, bool? IsSupplier, bool? IsCustomer) : IRequest<List<ThirdPartyDto>>;
+public record GetThirdPartiesQuery(int FarmId, bool? IsSupplier, bool? IsCustomer, int Page = 1, int PageSize = 10) : IRequest<List<ThirdPartyDto>>;
 
 public class GetThirdPartiesQueryHandler : IRequestHandler<GetThirdPartiesQuery, List<ThirdPartyDto>>
 {
@@ -22,7 +22,7 @@ public class GetThirdPartiesQueryHandler : IRequestHandler<GetThirdPartiesQuery,
 
     public async Task<List<ThirdPartyDto>> Handle(GetThirdPartiesQuery request, CancellationToken cancellationToken)
     {
-        var list = await _repository.GetAllAsync(request.FarmId, request.IsSupplier, request.IsCustomer, cancellationToken);
+        var list = await _repository.GetAllAsync(request.FarmId, request.IsSupplier, request.IsCustomer, request.Page, request.PageSize, cancellationToken);
 
         return list.Select(tp => new ThirdPartyDto
         {
