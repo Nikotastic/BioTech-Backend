@@ -10,6 +10,7 @@ COPY AuthService.Application/*.csproj ./AuthService.Application/
 COPY AuthService.Domain/*.csproj ./AuthService.Domain/
 COPY AuthService.Presentation/*.csproj ./AuthService.Presentation/
 COPY Authservice.Infrastructure/*.csproj ./Authservice.Infrastructure/
+COPY Shared.Infrastructure/*.csproj ./Shared.Infrastructure/
 
 # Restore dependencies
 RUN dotnet restore AuthService.Presentation/AuthService.Presentation.csproj

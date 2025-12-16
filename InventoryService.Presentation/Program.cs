@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -10,6 +11,16 @@ builder.Services.AddSwaggerGen();
 // Register Messenger
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<Shared.Infrastructure.Interfaces.IMessenger, Shared.Infrastructure.Services.HttpMessenger>();
+
+// Register MediatR
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(InventoryService.Application.Handlers.CreateInventoryItemCommandHandler).Assembly));
+
+// Register DbContext (InMemory for now as placeholder)
+builder.Services.AddDbContext<InventoryService.Infrastructure.Persistence.InventoryDbContext>(options =>
+    options.UseInMemoryDatabase("InventoryDb"));
+
+// Register Repository
+builder.Services.AddScoped<InventoryService.Application.Interfaces.IInventoryRepository, InventoryService.Infrastructure.Persistence.InventoryRepository>();
 
 var app = builder.Build();
 
