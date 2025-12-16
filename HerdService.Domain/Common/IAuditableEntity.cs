@@ -2,8 +2,8 @@ namespace HerdService.Domain.Common;
 
 public interface IAuditableEntity
 {
-    DateTime CreatedAt { get; set; }
-    DateTime? UpdatedAt { get; set; }
-    int? CreatedBy { get; set; }
-    int? LastModifiedBy { get; set; }
+    DateTime CreatedAt { get; }
+    DateTime? UpdatedAt { get; }
+    int? CreatedBy { get; }
+    int? LastModifiedBy { get; }
 }

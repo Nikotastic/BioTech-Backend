@@ -1,13 +1,11 @@
+using System.Security.Claims;
 
 namespace ReproductionService.Presentation.Services;
 
-public interface IGatewayAuthenticationService
-{
-    int GetFarmId();
-    int GetUserId();
-}
-
-public class GatewayAuthenticationService : IGatewayAuthenticationService
+/// <summary>
+/// Service to extract user information from Gateway headers
+/// </summary>
+public class GatewayAuthenticationService
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -16,26 +14,49 @@ public class GatewayAuthenticationService : IGatewayAuthenticationService
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public int GetFarmId()
+    public int? GetUserId()
     {
-        if (_httpContextAccessor.HttpContext?.Request.Headers.TryGetValue("X-Farm-Id", out var farmIdHeader) == true)
-        {
-            if (int.TryParse(farmIdHeader, out var farmId))
-                return farmId;
-        }
+        var userIdClaim = _httpContextAccessor.HttpContext?.User
+            .FindFirst(c => c.Type == ClaimTypes.NameIdentifier || c.Type == "userId")?.Value;
 
-        throw new UnauthorizedAccessException("Farm context missing");
+        return int.TryParse(userIdClaim, out var userId) ? userId : null;
     }
 
-    public int GetUserId()
+    public string? GetUserEmail()
     {
-        if (_httpContextAccessor.HttpContext?.Request.Headers.TryGetValue("X-User-Id", out var userIdHeader) == true)
-        {
-            if (int.TryParse(userIdHeader, out var userId))
-                return userId;
-        }
+        return _httpContextAccessor.HttpContext?.User
+            .FindFirst(ClaimTypes.Email)?.Value;
+    }
 
-        // Optional: Return 0 or throw if user context expected
-        return 0; 
+    public string? GetUserName()
+    {
+        return _httpContextAccessor.HttpContext?.User
+            .FindFirst(ClaimTypes.Name)?.Value;
+    }
+
+    public List<string> GetUserRoles()
+    {
+        return _httpContextAccessor.HttpContext?.User
+            .FindAll(ClaimTypes.Role)
+            .Select(c => c.Value)
+            .ToList() ?? new List<string>();
+    }
+
+    public int? GetFarmId()
+    {
+        var farmIdClaim = _httpContextAccessor.HttpContext?.User
+            .FindFirst("farmId")?.Value;
+
+        return int.TryParse(farmIdClaim, out var farmId) ? farmId : null;
+    }
+
+    public bool IsInRole(string role)
+    {
+        return _httpContextAccessor.HttpContext?.User.IsInRole(role) ?? false;
+    }
+
+    public bool IsAuthenticated()
+    {
+        return _httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated ?? false;
     }
 }

@@ -67,9 +67,9 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<Shared.Infrastructure.Interfaces.IMessenger, Shared.Infrastructure.Services.HttpMessenger>();
 
-// Register Auth
+// Register Gateway Auth
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<CommercialService.Presentation.Services.IGatewayAuthenticationService, CommercialService.Presentation.Services.GatewayAuthenticationService>();
+builder.Services.AddScoped<CommercialService.Presentation.Services.GatewayAuthenticationService>();
 
 var app = builder.Build();
 

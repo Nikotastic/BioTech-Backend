@@ -43,9 +43,9 @@ builder.Services.AddHealthChecks()
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<Shared.Infrastructure.Interfaces.IMessenger, Shared.Infrastructure.Services.HttpMessenger>();
 
-// Register Auth
+// Register Gateway Auth
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<ReproductionService.Presentation.Services.IGatewayAuthenticationService, ReproductionService.Presentation.Services.GatewayAuthenticationService>();
+builder.Services.AddScoped<ReproductionService.Presentation.Services.GatewayAuthenticationService>();
 
 var app = builder.Build();
 

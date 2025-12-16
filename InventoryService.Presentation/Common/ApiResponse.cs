@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace InventoryService.Presentation.Common;
 
 public class ApiResponse<T>
