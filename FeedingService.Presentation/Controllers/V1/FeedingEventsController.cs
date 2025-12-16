@@ -1,8 +1,11 @@
-using FeedingService.Application.Commands;
+using FeedingService.Application.Commands.CancelFeedingEvent;
+using FeedingService.Application.Commands.CreateFeedingEvent;
 using FeedingService.Application.DTOs;
 using FeedingService.Application.Queries.GetFeedingEventById;
+using FeedingService.Application.Queries.GetFeedingEventsByAnimal;
 using FeedingService.Application.Queries.GetFeedingEventsByBatch;
 using FeedingService.Application.Queries.GetFeedingEventsByFarm;
+using FeedingService.Application.Queries.GetFeedingEventsByProduct;
 using FeedingService.Presentation.Common;
 using FeedingService.Presentation.Services;
 using MediatR;
@@ -60,11 +63,13 @@ public class FeedingEventsController : ControllerBase
         int farmId,
         [FromQuery] DateTime? fromDate,
         [FromQuery] DateTime? toDate,
-        CancellationToken ct)
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        CancellationToken ct = default)
     {
         _logger.LogInformation("Getting feeding events for farm: {FarmId}", farmId);
 
-        var query = new GetFeedingEventsByFarmQuery(farmId, fromDate, toDate);
+        var query = new GetFeedingEventsByFarmQuery(farmId, fromDate, toDate, page, pageSize);
         var result = await _mediator.Send(query, ct);
 
         return Ok(ApiResponse<FeedingEventListResponse>.Ok(result));
@@ -75,11 +80,53 @@ public class FeedingEventsController : ControllerBase
     /// </summary>
     [HttpGet("batch/{batchId}")]
     [ProducesResponseType(typeof(ApiResponse<FeedingEventListResponse>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetByBatch(int batchId, CancellationToken ct)
+    public async Task<IActionResult> GetByBatch(
+        int batchId,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        CancellationToken ct = default)
     {
         _logger.LogInformation("Getting feeding events for batch: {BatchId}", batchId);
 
-        var query = new GetFeedingEventsByBatchQuery(batchId);
+        var query = new GetFeedingEventsByBatchQuery(batchId, page, pageSize);
+        var result = await _mediator.Send(query, ct);
+
+        return Ok(ApiResponse<FeedingEventListResponse>.Ok(result));
+    }
+
+    /// <summary>
+    /// Get feeding events by product
+    /// </summary>
+    [HttpGet("product/{productId}")]
+    [ProducesResponseType(typeof(ApiResponse<FeedingEventListResponse>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetByProduct(
+        int productId,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        CancellationToken ct = default)
+    {
+        _logger.LogInformation("Getting feeding events for product: {ProductId}", productId);
+
+        var query = new GetFeedingEventsByProductQuery(productId, page, pageSize);
+        var result = await _mediator.Send(query, ct);
+
+        return Ok(ApiResponse<FeedingEventListResponse>.Ok(result));
+    }
+
+    /// <summary>
+    /// Get feeding events by animal
+    /// </summary>
+    [HttpGet("animal/{animalId}")]
+    [ProducesResponseType(typeof(ApiResponse<FeedingEventListResponse>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetByAnimal(
+        long animalId,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        CancellationToken ct = default)
+    {
+        _logger.LogInformation("Getting feeding events for animal: {AnimalId}", animalId);
+
+        var query = new GetFeedingEventsByAnimalQuery(animalId, page, pageSize);
         var result = await _mediator.Send(query, ct);
 
         return Ok(ApiResponse<FeedingEventListResponse>.Ok(result));
@@ -123,41 +170,18 @@ public class FeedingEventsController : ControllerBase
     }
 
     /// <summary>
-    /// Update an existing feeding event
+    /// Cancel a feeding event (Soft Delete)
     /// </summary>
-    [HttpPut("{id}")]
+    [HttpDelete("{id}")]
     [ProducesResponseType(typeof(ApiResponse<FeedingEventResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Update(
-        long id,
-        [FromBody] UpdateFeedingEventRequest request,
-        CancellationToken ct)
+    public async Task<IActionResult> Cancel(long id, CancellationToken ct)
     {
-        if (id != request.Id)
-            return BadRequest(ApiResponse<FeedingEventResponse>.Fail("ID mismatch"));
+        _logger.LogInformation("Cancelling feeding event: {Id}", id);
 
-        _logger.LogInformation("Updating feeding event: {Id}", id);
-
-        var userId = _authService.GetUserId();
-
-        var command = new UpdateFeedingEventCommand(
-            request.Id,
-            request.FarmId,
-            request.SupplyDate,
-            request.DietId,
-            request.BatchId,
-            request.AnimalId,
-            request.ProductId,
-            request.TotalQuantity,
-            request.AnimalsFedCount,
-            request.UnitCostAtMoment,
-            request.Observations,
-            userId
-        );
-
+        var command = new CancelFeedingEventCommand(id);
         var result = await _mediator.Send(command, ct);
 
-        return Ok(ApiResponse<FeedingEventResponse>.Ok(result, "Feeding event updated successfully"));
+        return Ok(ApiResponse<FeedingEventResponse>.Ok(result, "Feeding event cancelled successfully"));
     }
 }

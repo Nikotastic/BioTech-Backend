@@ -9,7 +9,7 @@
                     "Port": 8080
                 }
             ],
-            "UpstreamPathTemplate": "/api/auth/{everything}",
+            "UpstreamPathTemplate": "/api/Auth/{everything}",
             "UpstreamHttpMethod": [
                 "GET",
                 "POST",
@@ -28,6 +28,159 @@
                 }
             ],
             "UpstreamPathTemplate": "/api/v1/FeedingEvents/{everything}",
+            "UpstreamHttpMethod": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/v1/Reproduction/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "reproduction-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/v1/Reproduction/{everything}",
+            "UpstreamHttpMethod": [
+                "GET",
+                "POST",
+                "DELETE",
+                "OPTIONS"
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/v1/animals/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "herd-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/v1/animals/{everything}",
+            "UpstreamHttpMethod": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/v1/batches/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "herd-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/v1/batches/{everything}",
+            "UpstreamHttpMethod": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/v1/breeds/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "herd-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/v1/breeds/{everything}",
+            "UpstreamHttpMethod": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/v1/categories/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "herd-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/v1/categories/{everything}",
+            "UpstreamHttpMethod": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/v1/movement-types/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "herd-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/v1/movement-types/{everything}",
+            "UpstreamHttpMethod": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/v1/paddocks/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "herd-service",
+                    "Port": 8080
+                }
+            ],
+            "UpstreamPathTemplate": "/api/v1/paddocks/{everything}",
             "UpstreamHttpMethod": [
                 "GET",
                 "POST",

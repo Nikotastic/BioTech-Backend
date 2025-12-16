@@ -34,7 +34,7 @@ public class ThirdPartyRepository : IThirdPartyRepository
         return await _context.ThirdParties.FindAsync(new object[] { id }, cancellationToken);
     }
 
-    public async Task<List<ThirdParty>> GetAllAsync(int farmId, bool? isSupplier, bool? isCustomer, CancellationToken cancellationToken)
+    public async Task<List<ThirdParty>> GetAllAsync(int farmId, bool? isSupplier, bool? isCustomer, int page, int pageSize, CancellationToken cancellationToken)
     {
         var query = _context.ThirdParties.AsNoTracking().Where(tp => tp.FarmId == farmId);
 
@@ -48,7 +48,11 @@ public class ThirdPartyRepository : IThirdPartyRepository
             query = query.Where(tp => tp.IsCustomer);
         }
 
-        return await query.OrderBy(tp => tp.FullName).ToListAsync(cancellationToken);
+        return await query
+            .OrderBy(tp => tp.FullName)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<bool> ExistsAsync(int farmId, string identityDocument, CancellationToken cancellationToken)

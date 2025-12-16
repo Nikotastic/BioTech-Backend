@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace CommercialService.Application.Queries;
 
-public record GetTransactionsQuery(int FarmId, System.DateTime? FromDate, System.DateTime? ToDate, TransactionType? Type) : IRequest<List<TransactionSummaryDto>>;
+public record GetTransactionsQuery(int FarmId, System.DateTime? FromDate, System.DateTime? ToDate, TransactionType? Type, int Page = 1, int PageSize = 10) : IRequest<List<TransactionSummaryDto>>;
 
 public class GetTransactionsQueryHandler : IRequestHandler<GetTransactionsQuery, List<TransactionSummaryDto>>
 {
@@ -22,7 +22,7 @@ public class GetTransactionsQueryHandler : IRequestHandler<GetTransactionsQuery,
 
     public async Task<List<TransactionSummaryDto>> Handle(GetTransactionsQuery request, CancellationToken cancellationToken)
     {
-        var transactions = await _repository.GetTransactionsAsync(request.FarmId, request.FromDate, request.ToDate, request.Type, cancellationToken);
+        var transactions = await _repository.GetTransactionsAsync(request.FarmId, request.FromDate, request.ToDate, request.Type, request.Page, request.PageSize, cancellationToken);
 
         return transactions.Select(t => new TransactionSummaryDto
         {

@@ -6,5 +6,7 @@ namespace FeedingService.Application.Queries.GetFeedingEventsByFarm;
 public record GetFeedingEventsByFarmQuery(
     int FarmId,
     DateTime? FromDate,
-    DateTime? ToDate
+    DateTime? ToDate,
+    int Page = 1,
+    int PageSize = 10
 ) : IRequest<FeedingEventListResponse>;
