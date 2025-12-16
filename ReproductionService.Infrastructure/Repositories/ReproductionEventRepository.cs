@@ -15,28 +15,23 @@ public class ReproductionEventRepository : IReproductionEventRepository
         _context = context;
     }
 
-    public async Task<ReproductionEvent> AddAsync(ReproductionEvent reproductionEvent, CancellationToken ct)
-    {
-        await _context.ReproductionEvents.AddAsync(reproductionEvent, ct);
-        await _context.SaveChangesAsync(ct);
-        return reproductionEvent;
-    }
-
-    public async Task<ReproductionEvent?> GetByIdAsync(long id, CancellationToken ct)
+    public async Task<ReproductionEvent?> GetByIdAsync(long id, CancellationToken ct = default)
     {
         return await _context.ReproductionEvents
             .FirstOrDefaultAsync(e => e.Id == id, ct);
     }
 
-    public async Task<IEnumerable<ReproductionEvent>> GetByAnimalIdAsync(long animalId, CancellationToken ct)
+    public async Task<IEnumerable<ReproductionEvent>> GetByAnimalIdAsync(long animalId, int page, int pageSize, CancellationToken ct = default)
     {
         return await _context.ReproductionEvents
             .Where(e => e.AnimalId == animalId && !e.IsCancelled)
             .OrderByDescending(e => e.EventDate)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync(ct);
     }
 
-    public async Task<IEnumerable<ReproductionEvent>> GetByFarmIdAsync(int farmId, DateTime? from, DateTime? to, CancellationToken ct)
+    public async Task<IEnumerable<ReproductionEvent>> GetByFarmIdAsync(int farmId, DateTime? from, DateTime? to, int page, int pageSize, CancellationToken ct = default)
     {
         var query = _context.ReproductionEvents
             .Where(e => e.FarmId == farmId && !e.IsCancelled);
@@ -49,18 +44,29 @@ public class ReproductionEventRepository : IReproductionEventRepository
 
         return await query
             .OrderByDescending(e => e.EventDate)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync(ct);
     }
 
-    public async Task<IEnumerable<ReproductionEvent>> GetByTypeAsync(ReproductionEventType type, int farmId, CancellationToken ct)
+    public async Task<IEnumerable<ReproductionEvent>> GetByTypeAsync(ReproductionEventType type, int farmId, int page, int pageSize, CancellationToken ct = default)
     {
         return await _context.ReproductionEvents
             .Where(e => e.EventType == type && e.FarmId == farmId && !e.IsCancelled)
             .OrderByDescending(e => e.EventDate)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync(ct);
     }
 
-    public async Task UpdateAsync(ReproductionEvent reproductionEvent, CancellationToken ct)
+    public async Task<ReproductionEvent> AddAsync(ReproductionEvent reproductionEvent, CancellationToken ct = default)
+    {
+        await _context.ReproductionEvents.AddAsync(reproductionEvent, ct);
+        await _context.SaveChangesAsync(ct);
+        return reproductionEvent;
+    }
+
+    public async Task UpdateAsync(ReproductionEvent reproductionEvent, CancellationToken ct = default)
     {
         _context.ReproductionEvents.Update(reproductionEvent);
         await _context.SaveChangesAsync(ct);

@@ -39,6 +39,10 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<HerdDbContext>();
 
+// Register Messenger
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<Shared.Infrastructure.Interfaces.IMessenger, Shared.Infrastructure.Services.HttpMessenger>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

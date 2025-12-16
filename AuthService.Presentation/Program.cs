@@ -115,6 +115,10 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// Register Messenger
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<Shared.Infrastructure.Interfaces.IMessenger, Shared.Infrastructure.Services.HttpMessenger>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

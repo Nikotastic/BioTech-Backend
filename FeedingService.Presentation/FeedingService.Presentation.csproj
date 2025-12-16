@@ -26,6 +26,7 @@
     <ItemGroup>
       <ProjectReference Include="..\FeedingService.Application\FeedingService.Application.csproj" />
       <ProjectReference Include="..\FeedingService.Infrastructure\FeedingService.Infrastructure.csproj" />
+      <ProjectReference Include="..\Shared.Infrastructure\Shared.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

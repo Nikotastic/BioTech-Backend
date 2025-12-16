@@ -47,9 +47,11 @@ public class ThirdPartiesController : ControllerBase
     public async Task<ActionResult<List<ThirdPartyDto>>> GetAll(
         [FromQuery] int farmId,
         [FromQuery] bool? isSupplier,
-        [FromQuery] bool? isCustomer)
+        [FromQuery] bool? isCustomer,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
     {
-        var result = await _mediator.Send(new GetThirdPartiesQuery(farmId, isSupplier, isCustomer));
+        var result = await _mediator.Send(new GetThirdPartiesQuery(farmId, isSupplier, isCustomer, page, pageSize));
         return Ok(result);
     }
 

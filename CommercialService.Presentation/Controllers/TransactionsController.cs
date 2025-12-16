@@ -40,9 +40,11 @@ public class TransactionsController : ControllerBase
         [FromQuery] int farmId,
         [FromQuery] DateTime? fromDate,
         [FromQuery] DateTime? toDate,
-        [FromQuery] Domain.Enums.TransactionType? type)
+        [FromQuery] Domain.Enums.TransactionType? type,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
     {
-        var result = await _mediator.Send(new CommercialService.Application.Queries.GetTransactionsQuery(farmId, fromDate, toDate, type));
+        var result = await _mediator.Send(new CommercialService.Application.Queries.GetTransactionsQuery(farmId, fromDate, toDate, type, page, pageSize));
         return Ok(result);
     }
 
