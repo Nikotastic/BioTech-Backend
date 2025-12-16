@@ -36,6 +36,7 @@ builder.Services.AddEndpointsApiExplorer();
 // Add Application & Infrastructure
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddScoped<HealthService.Presentation.Services.GatewayAuthenticationService>();
 
 // Swagger
 builder.Services.AddSwaggerGen(c =>
@@ -70,6 +71,9 @@ builder.Services.AddSwaggerGen(c =>
 // Register Messenger
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<Shared.Infrastructure.Interfaces.IMessenger, Shared.Infrastructure.Services.HttpMessenger>();
+
+// Register Gateway Auth
+builder.Services.AddScoped<HealthService.Presentation.Services.GatewayAuthenticationService>();
 
 var app = builder.Build();
 
