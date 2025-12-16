@@ -19,9 +19,9 @@ namespace ReproductionService.Presentation.Controllers;
 public class ReproductionController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly Services.IGatewayAuthenticationService _authService;
+    private readonly Services.GatewayAuthenticationService _authService;
 
-    public ReproductionController(IMediator mediator, Services.IGatewayAuthenticationService authService)
+    public ReproductionController(IMediator mediator, Services.GatewayAuthenticationService authService)
     {
         _mediator = mediator;
         _authService = authService;
@@ -72,7 +72,9 @@ public class ReproductionController : ControllerBase
         [FromQuery] int pageSize = 10)
     {
         var farmId = _authService.GetFarmId();
-        var query = new GetReproductionEventsByFarmQuery(farmId, fromDate, toDate, page, pageSize);
+        if (!farmId.HasValue) return BadRequest(ApiResponse<ReproductionEventListResponse>.Fail("User is not associated with a valid Farm"));
+
+        var query = new GetReproductionEventsByFarmQuery(farmId.Value, fromDate, toDate, page, pageSize);
         var result = await _mediator.Send(query);
         return Ok(ApiResponse<ReproductionEventListResponse>.Ok(result));
     }
@@ -89,7 +91,7 @@ public class ReproductionController : ControllerBase
         [FromQuery] int pageSize = 10)
     {
         var contextFarmId = _authService.GetFarmId();
-        if (farmId != contextFarmId)
+        if (contextFarmId.HasValue && farmId != contextFarmId.Value)
            return Unauthorized(ApiResponse<ReproductionEventListResponse>.Fail("Access mismatch for Farm ID"));
 
         var query = new GetReproductionEventsByFarmQuery(farmId, fromDate, toDate, page, pageSize);
@@ -109,7 +111,9 @@ public class ReproductionController : ControllerBase
         [FromQuery] int pageSize = 10)
     {
         var farmId = _authService.GetFarmId();
-        var query = new GetReproductionEventsByTypeQuery(type, farmId, page, pageSize);
+        if (!farmId.HasValue) return BadRequest(ApiResponse<ReproductionEventListResponse>.Fail("User is not associated with a valid Farm"));
+
+        var query = new GetReproductionEventsByTypeQuery(type, farmId.Value, page, pageSize);
         var result = await _mediator.Send(query);
         return Ok(ApiResponse<ReproductionEventListResponse>.Ok(result));
     }
@@ -123,8 +127,10 @@ public class ReproductionController : ControllerBase
         // Override FarmId and RegisteredBy from Context
         var contextFarmId = _authService.GetFarmId();
         var contextUserId = _authService.GetUserId();
+
+        if (!contextFarmId.HasValue) return BadRequest(ApiResponse<ReproductionEventResponse>.Fail("User is not associated with a valid Farm"));
         
-        var secureCommand = command with { FarmId = contextFarmId, RegisteredBy = contextUserId };
+        var secureCommand = command with { FarmId = contextFarmId.Value, RegisteredBy = contextUserId };
 
         var result = await _mediator.Send(secureCommand);
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, ApiResponse<ReproductionEventResponse>.Ok(result, "Reproduction event registered successfully"));

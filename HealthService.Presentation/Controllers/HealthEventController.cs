@@ -7,6 +7,10 @@ using HealthService.Application.DTOs;
 using HealthService.Presentation.Services;
 using HealthService.Presentation.Common;
 using FluentValidation;
+using HealthService.Application.Queries.GetHealthEventsByAnimal;
+using HealthService.Application.Queries.GetHealthEventsByBatch;
+using HealthService.Application.Queries.GetHealthEventsByFarm;
+using HealthService.Application.Queries.GetHealthEventsByType;
 
 namespace HealthService.Presentation.Controllers;
 

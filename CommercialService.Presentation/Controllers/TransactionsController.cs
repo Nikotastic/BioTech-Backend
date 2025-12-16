@@ -19,9 +19,9 @@ namespace CommercialService.Presentation.Controllers;
 public class TransactionsController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly Services.IGatewayAuthenticationService _authService;
+    private readonly Services.GatewayAuthenticationService _authService;
 
-    public TransactionsController(IMediator mediator, Services.IGatewayAuthenticationService authService)
+    public TransactionsController(IMediator mediator, Services.GatewayAuthenticationService authService)
     {
         _mediator = mediator;
         _authService = authService;
@@ -37,15 +37,17 @@ public class TransactionsController : ControllerBase
         var userId = _authService.GetUserId();
         var farmId = _authService.GetFarmId();
         
-        if (dto.FarmId != 0 && dto.FarmId != farmId)
+        if (!farmId.HasValue) return BadRequest(ApiResponse<long>.Fail("User is not associated with a valid Farm"));
+        
+        if (dto.FarmId != 0 && dto.FarmId != farmId.Value)
              return Unauthorized(ApiResponse<long>.Fail("FarmId mismatch with Gateway Context"));
         
         // Ensure DTO uses context farm if 0 or matches.
-        var secureDto = dto with { FarmId = farmId }; // Assuming record or modifiable
+        var secureDto = dto with { FarmId = farmId.Value }; // Assuming record or modifiable
         // Actually dto might be class. Let's assume CreateTransactionCommand takes userId separately.
         
         // Command expects userId constraint
-        var transactionId = await _mediator.Send(new CreateTransactionCommand(secureDto, userId));
+        var transactionId = await _mediator.Send(new CreateTransactionCommand(secureDto, userId ?? 0));
         return CreatedAtAction(nameof(GetTransactionById), new { id = transactionId }, ApiResponse<long>.Ok(transactionId, "Transaction created successfully"));
     }
 
@@ -58,7 +60,9 @@ public class TransactionsController : ControllerBase
         [FromQuery] int pageSize = 10)
     {
         var farmId = _authService.GetFarmId();
-        var result = await _mediator.Send(new CommercialService.Application.Queries.GetTransactionsQuery(farmId, fromDate, toDate, type, page, pageSize));
+        if (!farmId.HasValue) return BadRequest(ApiResponse<List<TransactionSummaryDto>>.Fail("User is not associated with a valid Farm"));
+        
+        var result = await _mediator.Send(new CommercialService.Application.Queries.GetTransactionsQuery(farmId.Value, fromDate, toDate, type, page, pageSize));
         return Ok(ApiResponse<List<TransactionSummaryDto>>.Ok(result));
     }
 

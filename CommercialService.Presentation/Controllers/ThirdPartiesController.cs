@@ -17,9 +17,9 @@ namespace CommercialService.Presentation.Controllers;
 public class ThirdPartiesController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly Services.IGatewayAuthenticationService _authService;
+    private readonly Services.GatewayAuthenticationService _authService;
 
-    public ThirdPartiesController(IMediator mediator, Services.IGatewayAuthenticationService authService)
+    public ThirdPartiesController(IMediator mediator, Services.GatewayAuthenticationService authService)
     {
         _mediator = mediator;
         _authService = authService;
@@ -31,8 +31,10 @@ public class ThirdPartiesController : ControllerBase
         try
         {
             var farmId = _authService.GetFarmId();
+            if (!farmId.HasValue) return BadRequest(ApiResponse<long>.Fail("User is not associated with a valid Farm"));
+            
             // Ensure DTO uses context farm
-            var secureDto = dto with { FarmId = farmId }; 
+            var secureDto = dto with { FarmId = farmId.Value }; 
             
             var id = await _mediator.Send(new CreateThirdPartyCommand(secureDto));
             return CreatedAtAction(nameof(GetById), new { id = id }, ApiResponse<long>.Ok(id, "Third party created successfully"));
@@ -61,7 +63,9 @@ public class ThirdPartiesController : ControllerBase
         [FromQuery] int pageSize = 10)
     {
         var farmId = _authService.GetFarmId();
-        var result = await _mediator.Send(new GetThirdPartiesQuery(farmId, isSupplier, isCustomer, page, pageSize));
+        if (!farmId.HasValue) return BadRequest(ApiResponse<List<ThirdPartyDto>>.Fail("User is not associated with a valid Farm"));
+        
+        var result = await _mediator.Send(new GetThirdPartiesQuery(farmId.Value, isSupplier, isCustomer, page, pageSize));
         return Ok(ApiResponse<List<ThirdPartyDto>>.Ok(result));
     }
 
