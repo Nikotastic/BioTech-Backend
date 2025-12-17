@@ -60,14 +60,11 @@ builder.Services.AddCors(options =>
 });
 
 // Configure Port for Railway
-var port = Environment.GetEnvironmentVariable("PORT");
-if (!string.IsNullOrEmpty(port))
+var port = Environment.GetEnvironmentVariable("PORT") ?? builder.Configuration["Port"] ?? "8080";
+builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    builder.WebHost.ConfigureKestrel(serverOptions =>
-    {
-        serverOptions.ListenAnyIP(int.Parse(port));
-    });
-}
+    serverOptions.ListenAnyIP(int.Parse(port));
+});
 
 // Configure Database Connection from Environment Variables (Railway)
 var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
