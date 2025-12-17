@@ -5,6 +5,9 @@ using HerdService.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
+// Enable legacy timestamp behavior to handle DateTime Kind (UTC/Unspecified) issues
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure Port for Railway
