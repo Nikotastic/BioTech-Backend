@@ -31,6 +31,16 @@ public class GatewayAuthenticationMiddleware
             return;
         }
 
+        // Check if allow gateway secret is present
+        string? gatewaySecret = context.Request.Headers["X-Gateway-Secret"].FirstOrDefault();
+
+        if (string.IsNullOrEmpty(gatewaySecret))
+        {
+            // Fallback to standard authentication (JWT Bearer)
+            await _next(context);
+            return;
+        }
+
         // Validate request comes from Gateway
         if (!ValidateGatewayRequest(context))
         {
@@ -46,7 +56,7 @@ public class GatewayAuthenticationMiddleware
 
         // Extract user information from headers sent by Gateway
         var userClaims = ExtractUserClaims(context);
-        
+
         if (userClaims.Any())
         {
             var identity = new ClaimsIdentity(userClaims, "Gateway");
@@ -64,7 +74,7 @@ public class GatewayAuthenticationMiddleware
 
         if (string.IsNullOrEmpty(gatewaySecret) || gatewaySecret != expectedSecret)
         {
-            _logger.LogWarning("Request rejected: Invalid or missing gateway secret from IP {IP}", 
+            _logger.LogWarning("Request rejected: Invalid or missing gateway secret from IP {IP}",
                 context.Connection.RemoteIpAddress);
             return false;
         }

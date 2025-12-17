@@ -6,7 +6,12 @@ using Microsoft.EntityFrameworkCore;
 using HerdService.Presentation.Middlewares;
 using Microsoft.OpenApi.Models;
 
+
 Env.TraversePath().Load(); // Moved to top
+
+// Enable legacy timestamp behavior to handle DateTime Kind (UTC/Unspecified) issues
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,7 +46,7 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
 })
-.AddJwtBearer(options => {});
+.AddJwtBearer(options => { });
 
 // Add Authorization
 builder.Services.AddAuthorization();
