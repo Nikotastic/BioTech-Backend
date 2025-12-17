@@ -77,12 +77,6 @@ public class FarmRepository : IFarmRepository
 
     public async Task DeleteAsync(int id, CancellationToken ct = default)
     {
-        // For physical delete, though prompt implies soft delete via Deactivate.
-        // If the interface implies deletion, we usually remove.
-        // However, requirements say "Deactivate(), Activate()" methods exist.
-        // Prompt creates DELETE /api/v1/farms/{id} ? No, it doesn't specify a DELETE endpoint.
-        // I'll implement generic DeleteAsync as physical delete just in case, but application logic might use UpdateAsync.
-        
         var farm = await _context.Farms.FindAsync(new object[] { id }, ct);
         if (farm != null)
         {

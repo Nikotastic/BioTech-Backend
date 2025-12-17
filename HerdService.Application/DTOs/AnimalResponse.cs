@@ -2,12 +2,14 @@ namespace HerdService.Application.DTOs;
 
 public record AnimalResponse(
     long Id,
-    string TagNumber,
-    string? ElectronicId,
+    string VisualCode,
+    string? ElectronicCode,
+    string? Name,
+    string? Color,
     int FarmId,
-    int BreedId,
+    int? BreedId,
     string? BreedName,
-    int CategoryId,
+    int? CategoryId, // Nullable now in entity? Yes
     string? CategoryName,
     int? BatchId,
     string? BatchName,
@@ -16,9 +18,14 @@ public record AnimalResponse(
     DateOnly BirthDate,
     int AgeInMonths,
     string Sex,
-    decimal? CurrentWeight,
-    DateOnly? LastWeightDate,
-    string Status,
+    string CurrentStatus,
+    string Purpose,
+    string? Origin,
+    DateOnly? EntryDate,
+    decimal InitialCost,
     bool IsActive,
-    string? Notes
+    long? MotherId,
+    long? FatherId,
+    string? ExternalMother,
+    string? ExternalFather
 );

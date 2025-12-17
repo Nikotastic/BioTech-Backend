@@ -19,8 +19,10 @@ public class GetAnimalsByFarmQueryHandler : IRequestHandler<GetAnimalsByFarmQuer
 
         return animals.Select(animal => new AnimalResponse(
             animal.Id,
-            animal.TagNumber,
-            animal.ElectronicId,
+            animal.VisualCode,
+            animal.ElectronicCode,
+            animal.Name,
+            animal.Color,
             animal.FarmId,
             animal.BreedId,
             animal.Breed?.Name,
@@ -33,11 +35,16 @@ public class GetAnimalsByFarmQueryHandler : IRequestHandler<GetAnimalsByFarmQuer
             animal.BirthDate,
             animal.GetAgeInMonths(),
             animal.Sex,
-            animal.CurrentWeight,
-            animal.LastWeightDate,
-            animal.Status,
-            animal.IsActive,
-            animal.Notes
+            animal.CurrentStatus,
+            animal.Purpose,
+            animal.Origin,
+            animal.EntryDate,
+            animal.InitialCost,
+            animal.CurrentStatus == "ACTIVE",
+            animal.MotherId,
+            animal.FatherId,
+            animal.ExternalMother,
+            animal.ExternalFather
         ));
     }
 }

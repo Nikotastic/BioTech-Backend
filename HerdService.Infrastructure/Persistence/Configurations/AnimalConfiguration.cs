@@ -13,52 +13,61 @@ public class AnimalConfiguration : IEntityTypeConfiguration<Animal>
         builder.HasKey(e => e.Id);
         builder.Property(e => e.Id).HasColumnName("id");
 
-        builder.Property(e => e.TagNumber)
-            .HasColumnName("tag_number")
-            .HasMaxLength(50)
+        builder.Property(e => e.VisualCode)
+            .HasColumnName("visual_code")
+            .HasMaxLength(20)
             .IsRequired();
 
-        builder.Property(e => e.ElectronicId)
-            .HasColumnName("electronic_id")
+        builder.Property(e => e.ElectronicCode)
+            .HasColumnName("electronic_code")
             .HasMaxLength(50);
 
+        builder.Property(e => e.Name)
+            .HasColumnName("name")
+            .HasMaxLength(100);
+
+        builder.Property(e => e.Color)
+            .HasColumnName("color")
+            .HasMaxLength(30);
+
         builder.Property(e => e.FarmId).HasColumnName("farm_id").IsRequired();
-        builder.Property(e => e.BreedId).HasColumnName("breed_id").IsRequired();
-        builder.Property(e => e.CategoryId).HasColumnName("category_id").IsRequired();
+        builder.Property(e => e.BreedId).HasColumnName("breed_id");
+        builder.Property(e => e.CategoryId).HasColumnName("category_id");
         builder.Property(e => e.BatchId).HasColumnName("batch_id");
         builder.Property(e => e.PaddockId).HasColumnName("paddock_id");
 
         builder.Property(e => e.BirthDate).HasColumnName("birth_date").HasColumnType("date").IsRequired();
-        builder.Property(e => e.Sex).HasColumnName("sex").HasMaxLength(10).IsRequired();
-        
-        builder.Property(e => e.BirthWeight).HasColumnName("birth_weight").HasColumnType("decimal(10,2)");
-        builder.Property(e => e.CurrentWeight).HasColumnName("current_weight").HasColumnType("decimal(10,2)");
-        builder.Property(e => e.LastWeightDate).HasColumnName("last_weight_date").HasColumnType("date");
+        builder.Property(e => e.Sex).HasColumnName("sex").HasMaxLength(1).IsFixedLength().IsRequired();
 
         builder.Property(e => e.MotherId).HasColumnName("mother_id");
         builder.Property(e => e.FatherId).HasColumnName("father_id");
+        builder.Property(e => e.ExternalMother).HasColumnName("external_mother").HasMaxLength(50);
+        builder.Property(e => e.ExternalFather).HasColumnName("external_father").HasMaxLength(50);
 
-        builder.Property(e => e.Status).HasColumnName("status").HasMaxLength(50).IsRequired();
-        builder.Property(e => e.StatusDate).HasColumnName("status_date").HasColumnType("date");
-        builder.Property(e => e.IsActive).HasColumnName("is_active").HasDefaultValue(true);
+        builder.Property(e => e.CurrentStatus)
+            .HasColumnName("current_status")
+            .HasMaxLength(20)
+            .HasDefaultValue("ACTIVE")
+            .IsRequired();
 
-        builder.Property(e => e.PurchasePrice).HasColumnName("purchase_price").HasColumnType("decimal(12,2)");
-        builder.Property(e => e.SalePrice).HasColumnName("sale_price").HasColumnType("decimal(12,2)");
-        builder.Property(e => e.SaleDate).HasColumnName("sale_date").HasColumnType("date");
-        builder.Property(e => e.Notes).HasColumnName("notes").HasColumnType("text");
+        builder.Property(e => e.Purpose)
+            .HasColumnName("purpose")
+            .HasMaxLength(20)
+            .HasDefaultValue("MEAT");
+
+        builder.Property(e => e.Origin)
+            .HasColumnName("origin")
+            .HasMaxLength(20);
+
+        builder.Property(e => e.EntryDate).HasColumnName("entry_date").HasColumnType("date");
+        builder.Property(e => e.InitialCost).HasColumnName("initial_cost").HasColumnType("numeric(12,2)").HasDefaultValue(0m);
 
         // Audit
         builder.Property(e => e.CreatedAt).HasColumnName("created_at").HasColumnType("timestamp with time zone").HasDefaultValueSql("CURRENT_TIMESTAMP");
-        builder.Property(e => e.UpdatedAt).HasColumnName("updated_at").HasColumnType("timestamp with time zone");
-        builder.Property(e => e.CreatedBy).HasColumnName("created_by");
-        builder.Property(e => e.LastModifiedBy).HasColumnName("last_modified_by");
 
         // Indexes
-        builder.HasIndex(e => new { e.FarmId, e.TagNumber }).IsUnique().HasDatabaseName("ix_animals_farm_tag");
-        builder.HasIndex(e => e.FarmId).HasDatabaseName("ix_animals_farm_id");
-        builder.HasIndex(e => e.BatchId).HasDatabaseName("ix_animals_batch_id");
-        builder.HasIndex(e => e.Status).HasDatabaseName("ix_animals_status");
-        builder.HasIndex(e => new { e.FarmId, e.IsActive }).HasDatabaseName("ix_animals_farm_active");
+        builder.HasIndex(e => new { e.FarmId, e.VisualCode }).IsUnique().HasDatabaseName("uk_animal_code_farm");
+        // Other assumed indexes or remove if not in schema request (uk_animal_code_farm matched constraint)
 
         // Relationships
         builder.HasOne(e => e.Breed)

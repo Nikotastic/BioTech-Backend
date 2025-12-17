@@ -24,12 +24,12 @@ public class AnimalRepository : IAnimalRepository
             .FirstOrDefaultAsync(a => a.Id == id, ct);
     }
 
-    public async Task<Animal?> GetByTagNumberAsync(string tagNumber, int farmId, CancellationToken ct = default)
+    public async Task<Animal?> GetByVisualCodeAsync(string visualCode, int farmId, CancellationToken ct = default)
     {
         return await _context.Animals
             .Include(a => a.Breed)
             .Include(a => a.Category)
-            .FirstOrDefaultAsync(a => a.TagNumber == tagNumber && a.FarmId == farmId, ct);
+            .FirstOrDefaultAsync(a => a.VisualCode == visualCode && a.FarmId == farmId, ct);
     }
 
     public async Task<IEnumerable<Animal>> GetByFarmIdAsync(int farmId, string? status, bool includeInactive, CancellationToken ct = default)
@@ -37,10 +37,10 @@ public class AnimalRepository : IAnimalRepository
         var query = _context.Animals.AsNoTracking().Where(a => a.FarmId == farmId);
 
         if (!includeInactive)
-            query = query.Where(a => a.IsActive);
+            query = query.Where(a => a.CurrentStatus == "ACTIVE");
 
         if (!string.IsNullOrEmpty(status))
-            query = query.Where(a => a.Status == status);
+            query = query.Where(a => a.CurrentStatus == status);
 
         return await query
             .Include(a => a.Breed)
@@ -53,7 +53,7 @@ public class AnimalRepository : IAnimalRepository
     public async Task<IEnumerable<Animal>> GetByBatchIdAsync(int batchId, CancellationToken ct = default)
     {
         return await _context.Animals.AsNoTracking()
-            .Where(a => a.BatchId == batchId && a.IsActive)
+            .Where(a => a.BatchId == batchId && a.CurrentStatus == "ACTIVE")
             .Include(a => a.Breed)
             .Include(a => a.Category)
             .ToListAsync(ct);
@@ -62,7 +62,7 @@ public class AnimalRepository : IAnimalRepository
     public async Task<IEnumerable<Animal>> GetByPaddockIdAsync(int paddockId, CancellationToken ct = default)
     {
         return await _context.Animals.AsNoTracking()
-            .Where(a => a.PaddockId == paddockId && a.IsActive)
+            .Where(a => a.PaddockId == paddockId && a.CurrentStatus == "ACTIVE")
             .Include(a => a.Breed)
             .Include(a => a.Category)
             .ToListAsync(ct);
@@ -87,8 +87,8 @@ public class AnimalRepository : IAnimalRepository
         await _context.SaveChangesAsync(ct);
     }
 
-    public async Task<bool> TagNumberExistsAsync(string tagNumber, int farmId, CancellationToken ct = default)
+    public async Task<bool> VisualCodeExistsAsync(string visualCode, int farmId, CancellationToken ct = default)
     {
-        return await _context.Animals.AnyAsync(a => a.TagNumber == tagNumber && a.FarmId == farmId, ct);
+        return await _context.Animals.AnyAsync(a => a.VisualCode == visualCode && a.FarmId == farmId, ct);
     }
 }

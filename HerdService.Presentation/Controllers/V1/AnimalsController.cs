@@ -27,28 +27,28 @@ public class AnimalsController : ControllerBase
     {
         var userId = _authService.GetUserId();
         var farmId = _authService.GetFarmId();
-        
+
         // If user is scoped to a farm, enforce it
         var effectiveFarmId = farmId ?? command.FarmId;
-        
+
         var secureCommand = command with { UserId = userId, FarmId = effectiveFarmId };
-        
-        try 
+
+        try
         {
             var result = await _mediator.Send(secureCommand);
             return Ok(ApiResponse<AnimalResponse>.Ok(result, "Animal registered successfully"));
         }
         catch (ValidationException ex)
         {
-             return BadRequest(ApiResponse<AnimalResponse>.Fail("Validation failed", ex.Errors.Select(e => e.ErrorMessage)));
+            return BadRequest(ApiResponse<AnimalResponse>.Fail("Validation failed", ex.Errors.Select(e => e.ErrorMessage)));
         }
         catch (ArgumentException ex)
         {
-             return BadRequest(ApiResponse<AnimalResponse>.Fail(ex.Message));
+            return BadRequest(ApiResponse<AnimalResponse>.Fail(ex.Message));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-             return StatusCode(500, ApiResponse<AnimalResponse>.Fail("An error occurred while processing your request"));
+            return StatusCode(500, ApiResponse<AnimalResponse>.Fail("An error occurred while processing your request"));
         }
     }
 
@@ -58,7 +58,7 @@ public class AnimalsController : ControllerBase
         var authFarmId = _authService.GetFarmId();
         var effectiveFarmId = authFarmId ?? farmId;
 
-        if (effectiveFarmId <= 0) 
+        if (effectiveFarmId <= 0)
             return BadRequest(ApiResponse<IEnumerable<AnimalResponse>>.Fail("Farm ID is required"));
 
         var result = await _mediator.Send(new GetAnimalsByFarmQuery(effectiveFarmId, status, includeInactive));
@@ -108,18 +108,18 @@ public class AnimalsController : ControllerBase
     [HttpPost("{id}/movements")]
     public async Task<ActionResult<ApiResponse<AnimalResponse>>> RegisterMovement(long id, [FromBody] RegisterAnimalMovementCommand command)
     {
-         if (id != command.AnimalId) return BadRequest(ApiResponse<AnimalResponse>.Fail("ID mismatch"));
+        if (id != command.AnimalId) return BadRequest(ApiResponse<AnimalResponse>.Fail("ID mismatch"));
 
-         var userId = _authService.GetUserId();
-         var secureCommand = command with { UserId = userId };
+        var userId = _authService.GetUserId();
+        var secureCommand = command with { UserId = userId };
 
-         try
-         {
-             var result = await _mediator.Send(secureCommand);
-             return Ok(ApiResponse<AnimalResponse>.Ok(result, "Movement registered successfully"));
-         }
-         catch (KeyNotFoundException) { return NotFound(ApiResponse<AnimalResponse>.Fail("Animal not found")); }
-         catch (ArgumentException ex) { return BadRequest(ApiResponse<AnimalResponse>.Fail(ex.Message)); }
+        try
+        {
+            var result = await _mediator.Send(secureCommand);
+            return Ok(ApiResponse<AnimalResponse>.Ok(result, "Movement registered successfully"));
+        }
+        catch (KeyNotFoundException) { return NotFound(ApiResponse<AnimalResponse>.Fail("Animal not found")); }
+        catch (ArgumentException ex) { return BadRequest(ApiResponse<AnimalResponse>.Fail(ex.Message)); }
     }
 
     [HttpPut("{id}/weight")]
@@ -142,51 +142,51 @@ public class AnimalsController : ControllerBase
     [HttpPut("{id}/batch")]
     public async Task<ActionResult<ApiResponse<AnimalResponse>>> MoveToBatch(long id, [FromBody] MoveAnimalToBatchCommand command)
     {
-         if (id != command.AnimalId) return BadRequest(ApiResponse<AnimalResponse>.Fail("ID mismatch"));
+        if (id != command.AnimalId) return BadRequest(ApiResponse<AnimalResponse>.Fail("ID mismatch"));
 
-         var userId = _authService.GetUserId();
-         var secureCommand = command with { UserId = userId };
+        var userId = _authService.GetUserId();
+        var secureCommand = command with { UserId = userId };
 
-         try
-         {
-             var result = await _mediator.Send(secureCommand);
-             return Ok(ApiResponse<AnimalResponse>.Ok(result, "Animal moved to batch successfully"));
-         }
-         catch (KeyNotFoundException) { return NotFound(ApiResponse<AnimalResponse>.Fail("Animal or Batch not found")); }
-         catch (InvalidOperationException ex) { return BadRequest(ApiResponse<AnimalResponse>.Fail(ex.Message)); }
+        try
+        {
+            var result = await _mediator.Send(secureCommand);
+            return Ok(ApiResponse<AnimalResponse>.Ok(result, "Animal moved to batch successfully"));
+        }
+        catch (KeyNotFoundException) { return NotFound(ApiResponse<AnimalResponse>.Fail("Animal or Batch not found")); }
+        catch (InvalidOperationException ex) { return BadRequest(ApiResponse<AnimalResponse>.Fail(ex.Message)); }
     }
 
     [HttpPut("{id}/sell")]
     public async Task<ActionResult<ApiResponse<AnimalResponse>>> SellAnimal(long id, [FromBody] SellAnimalCommand command)
     {
-         if (id != command.AnimalId) return BadRequest(ApiResponse<AnimalResponse>.Fail("ID mismatch"));
+        if (id != command.AnimalId) return BadRequest(ApiResponse<AnimalResponse>.Fail("ID mismatch"));
 
-         var userId = _authService.GetUserId();
-         var secureCommand = command with { UserId = userId };
+        var userId = _authService.GetUserId();
+        var secureCommand = command with { UserId = userId };
 
-         try
-         {
-             var result = await _mediator.Send(secureCommand);
-             return Ok(ApiResponse<AnimalResponse>.Ok(result, "Animal sold successfully"));
-         }
-         catch (KeyNotFoundException) { return NotFound(ApiResponse<AnimalResponse>.Fail("Animal not found")); }
-         catch (ArgumentException ex) { return BadRequest(ApiResponse<AnimalResponse>.Fail(ex.Message)); }
+        try
+        {
+            var result = await _mediator.Send(secureCommand);
+            return Ok(ApiResponse<AnimalResponse>.Ok(result, "Animal sold successfully"));
+        }
+        catch (KeyNotFoundException) { return NotFound(ApiResponse<AnimalResponse>.Fail("Animal not found")); }
+        catch (ArgumentException ex) { return BadRequest(ApiResponse<AnimalResponse>.Fail(ex.Message)); }
     }
 
     [HttpPut("{id}/dead")]
     public async Task<ActionResult<ApiResponse<AnimalResponse>>> MarkAsDead(long id, [FromBody] MarkAnimalAsDeadCommand command)
     {
-         if (id != command.AnimalId) return BadRequest(ApiResponse<AnimalResponse>.Fail("ID mismatch"));
+        if (id != command.AnimalId) return BadRequest(ApiResponse<AnimalResponse>.Fail("ID mismatch"));
 
-         var userId = _authService.GetUserId();
-         var secureCommand = command with { UserId = userId };
+        var userId = _authService.GetUserId();
+        var secureCommand = command with { UserId = userId };
 
-         try
-         {
-             var result = await _mediator.Send(secureCommand);
-             return Ok(ApiResponse<AnimalResponse>.Ok(result, "Animal marked as dead"));
-         }
-         catch (KeyNotFoundException) { return NotFound(ApiResponse<AnimalResponse>.Fail("Animal not found")); }
-         catch (ArgumentException ex) { return BadRequest(ApiResponse<AnimalResponse>.Fail(ex.Message)); }
+        try
+        {
+            var result = await _mediator.Send(secureCommand);
+            return Ok(ApiResponse<AnimalResponse>.Ok(result, "Animal marked as dead"));
+        }
+        catch (KeyNotFoundException) { return NotFound(ApiResponse<AnimalResponse>.Fail("Animal not found")); }
+        catch (ArgumentException ex) { return BadRequest(ApiResponse<AnimalResponse>.Fail(ex.Message)); }
     }
 }

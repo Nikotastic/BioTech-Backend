@@ -15,11 +15,11 @@ public class AnimalCategoryConfiguration : IEntityTypeConfiguration<AnimalCatego
 
         builder.Property(e => e.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
         builder.Property(e => e.Description).HasColumnName("description").HasColumnType("text");
+        builder.Property(e => e.Sex).HasColumnName("sex").HasMaxLength(1);
+        builder.Property(e => e.MinAgeMonths).HasColumnName("min_age_months").HasDefaultValue(0);
+        builder.Property(e => e.MaxAgeMonths).HasColumnName("max_age_months");
 
-        builder.Property(e => e.CreatedAt).HasColumnName("created_at").HasColumnType("timestamp with time zone").HasDefaultValueSql("CURRENT_TIMESTAMP");
-        builder.Property(e => e.UpdatedAt).HasColumnName("updated_at").HasColumnType("timestamp with time zone");
-        builder.Property(e => e.CreatedBy).HasColumnName("created_by");
-        builder.Property(e => e.LastModifiedBy).HasColumnName("last_modified_by");
+        // Audit removed
 
         builder.HasIndex(e => e.Name).IsUnique();
     }
