@@ -1,8 +1,8 @@
-using MediatR;
 using HealthService.Application.DTOs;
 using HealthService.Application.Interfaces;
+using MediatR;
 
-namespace HealthService.Application.Queries;
+namespace HealthService.Application.Queries.GetHealthDashboardStats;
 
 public class GetHealthDashboardStatsQueryHandler : IRequestHandler<GetHealthDashboardStatsQuery, HealthDashboardStats>
 {

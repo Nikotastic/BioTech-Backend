@@ -24,16 +24,23 @@ public class GetHealthEventsByFarmQueryHandler : IRequestHandler<GetHealthEvents
         return events.Select(e => new HealthEventResponse(
             e.Id,
             e.FarmId,
-            e.EventDate,
-            e.EventType,
-            e.BatchId,
             e.AnimalId,
-            e.DiseaseDiagnosisId,
-            e.ProfessionalId,
-            e.ServiceCost.Amount,
-            e.Observations,
+            e.BatchId,
+            e.EventType,
+            e.EventDate,
+            e.Disease,
+            e.Treatment,
+            e.Medication,
+            e.Dosage,
+            e.DosageUnit,
+            e.VeterinarianName,
+            e.Cost,
+            e.Notes,
+            e.NextFollowUpDate,
+            e.RequiresFollowUp,
+            e.FollowUpNotes,
             e.CreatedAt,
-            e.CreatedBy
+            e.UpdatedAt
         )).ToList();
     }
 }
