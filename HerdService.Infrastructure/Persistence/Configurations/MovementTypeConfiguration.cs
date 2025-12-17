@@ -16,10 +16,8 @@ public class MovementTypeConfiguration : IEntityTypeConfiguration<MovementType>
         builder.Property(e => e.Name).HasColumnName("name").HasMaxLength(50).IsRequired();
         builder.Property(e => e.Description).HasColumnName("description").HasColumnType("text");
 
-        builder.Property(e => e.CreatedAt).HasColumnName("created_at").HasColumnType("timestamp with time zone").HasDefaultValueSql("CURRENT_TIMESTAMP");
-        builder.Property(e => e.UpdatedAt).HasColumnName("updated_at").HasColumnType("timestamp with time zone");
-        builder.Property(e => e.CreatedBy).HasColumnName("created_by");
-        builder.Property(e => e.LastModifiedBy).HasColumnName("last_modified_by");
+        builder.Property(e => e.AffectsInventory).HasColumnName("affects_inventory").HasDefaultValue(false);
+        builder.Property(e => e.InventorySign).HasColumnName("inventory_sign").HasDefaultValue(0);
 
         builder.HasIndex(e => e.Name).IsUnique();
     }

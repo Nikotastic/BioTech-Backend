@@ -20,22 +20,31 @@ public class UpdateAnimalCommandHandler : IRequestHandler<UpdateAnimalCommand, A
             throw new KeyNotFoundException($"Animal with ID {request.Id} not found.");
 
         animal.UpdateDetails(
-            request.TagNumber,
-            request.ElectronicId,
+            request.VisualCode,
+            request.ElectronicCode,
+            request.Name,
+            request.Color,
             request.BreedId,
             request.CategoryId,
+            request.Purpose,
             request.BirthDate,
-            request.Sex,
-            request.Notes,
-            request.UserId
+            request.Origin,
+            request.InitialCost,
+            request.EntryDate,
+            request.MotherId,
+            request.FatherId,
+            request.ExternalMother,
+            request.ExternalFather
         );
-        
+
         await _animalRepository.UpdateAsync(animal, cancellationToken);
 
         return new AnimalResponse(
             animal.Id,
-            animal.TagNumber,
-            animal.ElectronicId,
+            animal.VisualCode,
+            animal.ElectronicCode,
+            animal.Name,
+            animal.Color,
             animal.FarmId,
             animal.BreedId,
             animal.Breed?.Name,
@@ -48,11 +57,16 @@ public class UpdateAnimalCommandHandler : IRequestHandler<UpdateAnimalCommand, A
             animal.BirthDate,
             animal.GetAgeInMonths(),
             animal.Sex,
-            animal.CurrentWeight,
-            animal.LastWeightDate,
-            animal.Status,
-            animal.IsActive,
-            animal.Notes
+            animal.CurrentStatus,
+            animal.Purpose,
+            animal.Origin,
+            animal.EntryDate,
+            animal.InitialCost,
+            animal.CurrentStatus == "ACTIVE",
+            animal.MotherId,
+            animal.FatherId,
+            animal.ExternalMother,
+            animal.ExternalFather
         );
     }
 }

@@ -4,18 +4,23 @@ using HerdService.Application.DTOs;
 namespace HerdService.Application.Commands;
 
 public record RegisterAnimalCommand(
-    string TagNumber,
+    string VisualCode,
     int FarmId,
-    int BreedId,
-    int CategoryId,
-    DateOnly BirthDate,
     string Sex,
-    decimal? BirthWeight,
+    DateOnly BirthDate,
+    int? CategoryId,
+    int? BreedId,
+    string? Name,
+    string? ElectronicCode,
+    string? Color,
+    string? Purpose,
+    string? Origin,
+    decimal InitialCost,
     long? MotherId,
     long? FatherId,
+    string? ExternalMother,
+    string? ExternalFather,
     int? BatchId,
     int? PaddockId,
-    string? ElectronicId,
-    decimal? PurchasePrice,
     int? UserId // From Gateway
 ) : IRequest<AnimalResponse>;

@@ -20,13 +20,15 @@ public class SellAnimalCommandHandler : IRequestHandler<SellAnimalCommand, Anima
             throw new KeyNotFoundException($"Animal with ID {request.AnimalId} not found.");
 
         animal.MarkAsSold(request.SalePrice, request.SaleDate, request.UserId);
-        
+
         await _animalRepository.UpdateAsync(animal, cancellationToken);
 
         return new AnimalResponse(
             animal.Id,
-            animal.TagNumber,
-            animal.ElectronicId,
+            animal.VisualCode,
+            animal.ElectronicCode,
+            animal.Name,
+            animal.Color,
             animal.FarmId,
             animal.BreedId,
             animal.Breed?.Name,
@@ -39,11 +41,16 @@ public class SellAnimalCommandHandler : IRequestHandler<SellAnimalCommand, Anima
             animal.BirthDate,
             animal.GetAgeInMonths(),
             animal.Sex,
-            animal.CurrentWeight,
-            animal.LastWeightDate,
-            animal.Status,
-            animal.IsActive,
-            animal.Notes
+            animal.CurrentStatus,
+            animal.Purpose,
+            animal.Origin,
+            animal.EntryDate,
+            animal.InitialCost,
+            animal.CurrentStatus == "ACTIVE",
+            animal.MotherId,
+            animal.FatherId,
+            animal.ExternalMother,
+            animal.ExternalFather
         );
     }
 }

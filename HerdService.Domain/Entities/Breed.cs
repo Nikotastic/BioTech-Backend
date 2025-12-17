@@ -2,26 +2,24 @@ using HerdService.Domain.Common;
 
 namespace HerdService.Domain.Entities;
 
-public class Breed : IAuditableEntity
+public class Breed
 {
     public int Id { get; private set; }
     public string Name { get; private set; } = string.Empty;
-    public string Species { get; private set; } = string.Empty;
 
-    public DateTime CreatedAt { get; private set; }
-    public DateTime? UpdatedAt { get; private set; }
-    public int? CreatedBy { get; private set; }
-    public int? LastModifiedBy { get; private set; }
+    // Audit removed
+
+    public string? Description { get; private set; }
+    public bool Active { get; private set; }
 
     private Breed() { }
 
-    public Breed(string name, string species)
+    public Breed(string name, string? description = null)
     {
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Name required");
-        if (string.IsNullOrWhiteSpace(species)) throw new ArgumentException("Species required");
 
         Name = name;
-        Species = species;
-        CreatedAt = DateTime.UtcNow;
+        Description = description;
+        Active = true;
     }
 }

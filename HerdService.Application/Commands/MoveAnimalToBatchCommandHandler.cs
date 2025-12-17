@@ -23,33 +23,40 @@ public class MoveAnimalToBatchCommandHandler : IRequestHandler<MoveAnimalToBatch
 
         var batch = await _batchRepository.GetByIdAsync(request.BatchId, cancellationToken);
         if (batch == null)
-             throw new KeyNotFoundException($"Batch with ID {request.BatchId} not found.");
+            throw new KeyNotFoundException($"Batch with ID {request.BatchId} not found.");
 
         animal.MoveToBatch(request.BatchId, request.UserId);
-        
+
         await _animalRepository.UpdateAsync(animal, cancellationToken);
 
         return new AnimalResponse(
             animal.Id,
-            animal.TagNumber,
-            animal.ElectronicId,
+            animal.VisualCode,
+            animal.ElectronicCode,
+            animal.Name,
+            animal.Color,
             animal.FarmId,
             animal.BreedId,
             animal.Breed?.Name,
             animal.CategoryId,
             animal.Category?.Name,
             animal.BatchId,
-            animal.Batch?.Name, // Assuming included in GetById or updated reference
+            animal.Batch?.Name,
             animal.PaddockId,
             animal.Paddock?.Name,
             animal.BirthDate,
             animal.GetAgeInMonths(),
             animal.Sex,
-            animal.CurrentWeight,
-            animal.LastWeightDate,
-            animal.Status,
-            animal.IsActive,
-            animal.Notes
+            animal.CurrentStatus,
+            animal.Purpose,
+            animal.Origin,
+            animal.EntryDate,
+            animal.InitialCost,
+            animal.CurrentStatus == "ACTIVE",
+            animal.MotherId,
+            animal.FatherId,
+            animal.ExternalMother,
+            animal.ExternalFather
         );
     }
 }

@@ -15,12 +15,14 @@ public class PaddockConfiguration : IEntityTypeConfiguration<Paddock>
 
         builder.Property(e => e.FarmId).HasColumnName("farm_id").IsRequired();
         builder.Property(e => e.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
-        builder.Property(e => e.Capacity).HasColumnName("capacity");
-        builder.Property(e => e.IsActive).HasColumnName("is_active").HasDefaultValue(true);
+        builder.Property(e => e.Code).HasColumnName("code").HasMaxLength(20).IsRequired();
+        builder.Property(e => e.AreaHectares).HasColumnName("area_hectares").HasColumnType("numeric(10,2)").HasDefaultValue(0m);
+        builder.Property(e => e.GaugedCapacity).HasColumnName("gauged_capacity");
+        builder.Property(e => e.GrassType).HasColumnName("grass_type").HasMaxLength(50);
+        builder.Property(e => e.CurrentStatus).HasColumnName("current_status").HasDefaultValue("AVAILABLE");
 
-        builder.Property(e => e.CreatedAt).HasColumnName("created_at").HasColumnType("timestamp with time zone").HasDefaultValueSql("CURRENT_TIMESTAMP");
-        builder.Property(e => e.UpdatedAt).HasColumnName("updated_at").HasColumnType("timestamp with time zone");
-        builder.Property(e => e.CreatedBy).HasColumnName("created_by");
-        builder.Property(e => e.LastModifiedBy).HasColumnName("last_modified_by");
+        builder.HasIndex(e => new { e.FarmId, e.Code }).HasDatabaseName("uk_paddock_code_farm").IsUnique();
+
+        // Audit removed
     }
 }
