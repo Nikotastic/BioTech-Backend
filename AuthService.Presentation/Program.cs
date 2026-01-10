@@ -1,6 +1,6 @@
 using AuthService.Application;
 using AuthService.Infrastructure;
-
+using DotNetEnv;
 using Shared.Infrastructure.Extensions;
 
 

@@ -47,10 +47,27 @@
 
 ### Using Docker
 
-```bash
-# Build and run with Docker Compose
-docker-compose up --build
+1. **Setup Environment Variables**  
+   The project requires a `.env` file for configuration. I have provided a template.
+   
+   Copy the example file to `.env`:
+   ```bash
+   cp .env.example .env
+   # On Windows PowerShell:
+   # Copy-Item .env.example .env
+   ```
 
-# Stop containers
-docker-compose down
-```
+2. **Configure API Keys**  
+   Open the `.env` file and fill in the missing API keys:
+   - `GEMINI_API_KEY`
+   - `ANTHROPIC_API_KEY`
+
+3. **Run with Docker Compose**
+   ```bash
+   docker-compose up --build
+   ```
+
+4. **Stop containers**
+   ```bash
+   docker-compose down
+   ```

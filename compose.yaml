@@ -16,6 +16,14 @@
       interval: 5s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   auth-service:
     build:
@@ -40,6 +48,14 @@
         condition: service_healthy
     networks:
       - biotech-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   feeding-service:
     build:
@@ -63,6 +79,14 @@
         condition: service_healthy
     networks:
       - biotech-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   reproduction-service:
     build:
@@ -86,6 +110,14 @@
         condition: service_healthy
     networks:
       - biotech-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   herd-service:
     build:
@@ -109,6 +141,14 @@
         condition: service_healthy
     networks:
       - biotech-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   health-service:
     build:
@@ -133,6 +173,14 @@
         condition: service_healthy
     networks:
       - biotech-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   ai-service:
     build:
@@ -153,6 +201,14 @@
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - biotech-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   commercial-service:
     build:
@@ -179,6 +235,14 @@
         condition: service_healthy
     networks:
       - biotech-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   inventory-service:
     build:
@@ -202,6 +266,14 @@
         condition: service_healthy
     networks:
       - biotech-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   api-gateway:
     build:
@@ -242,6 +314,14 @@
         condition: service_healthy
     networks:
       - biotech-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
 networks:
   biotech-network:
